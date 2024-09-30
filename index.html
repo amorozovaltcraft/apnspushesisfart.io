@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="mask-icon" sizes="any" href="https://igor-egorov.dev.altkraft.com/695361968/1/642d6041c5255c487c271100/Favicon.png" color="#FFF">
+    <link rel="apple-touch-icon" sizes="192x192" href="https://igor-egorov.dev.altkraft.com/695361968/1/642d6041c5255c487c271100/Favicon.png" />
+    <link rel="apple-touch-startup-image" href="https://igor-egorov.dev.altkraft.com/695361968/1/642d6041c5255c487c271100/Favicon.png">
+    <meta name="apple-mobile-web-app-title" content="WebPush App">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+
+    <link rel="manifest" href="/manifest.json">
+
+    <title>Title</title>
+
+<!--    <script src="https://pxl.igor-egorov.dev.altkraft.com/ak_container.js?id=MXw2NQ.." ></script>-->
+     <script src="ak-push.js" ></script>
+</head>
+<body>
+<button type="button" id="init_sub" style="height: 100px; padding: 25px">Пользователь 1</button>
+<button type="button" id="reset" style="height: 100px; padding: 25px">ResetToken</button>
+<button type="button" id="init_sub2" style="height: 100px; padding: 25px">Пользователь 2</button>
+<button type="button" id="run_push" style="height: 100px; padding: 25px">Получить уведомление</button>
+<button type="button" id="w_killer" style="height: 100px; padding: 25px">KillAll</button>
+<script>
+    setInterval(() => {
+        console.log('counter');
+    }, 5000);
+
+    window.onload = () => navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        window.WebWorkers = registrations;
+
+        // const registration = navigator.serviceWorker.register(
+        //     "cache-service-worker.js",
+        //     { scope: "/" },
+        // );
+        //
+        // console.log("cache-service-worker.js", registration);
+
+        // window.akPush = new AKPush({});
+
+    });
+
+    const createByEmail = (email) => {
+        try {
+            window.akPush.initSubscription({ email });
+        }
+        catch (e) {
+            console.error(e);
+        }
+    };
+
+    document.getElementById('run_push').addEventListener('click', function() {
+        fetch("https://andrey-morozov.dev.altkraft.com/api/v1.1/campaigns/triggers/start/", {
+            body: '{"token": "2a673b30fca047029e4db25f9ea10865","format": "json", "id": 9}',
+            headers: { "Content-Type": "application/json" },
+            method: "POST",
+            mode: "no-cors",
+        }).then(console.log, console.log);
+    });
+    document.getElementById('init_sub').addEventListener('click', () => {
+        window.akPush = new AKPush({});
+        createByEmail('bulba@azcabaeba.su');
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+        AKPush.removeToken();
+    });
+    document.getElementById('init_sub2').addEventListener('click', () => {
+        createByEmail('NA@gangnam.style');
+    });
+    document.getElementById('w_killer').addEventListener('click', () => {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for(let registration of registrations) {
+                registration.unregister();
+            }
+        });
+    });
+</script>
+</body>
+</html>
